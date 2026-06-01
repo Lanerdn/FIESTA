@@ -1,0 +1,225 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<title>Invitación Especial</title>
+
+<style>
+
+body{
+    font-family: Arial, sans-serif;
+    background:#f5f5f5;
+    margin:0;
+    padding:20px;
+}
+
+.contenedor{
+    max-width:600px;
+    margin:auto;
+    background:#ffffff;
+    padding:30px;
+    border-radius:15px;
+    box-shadow:0 0 15px rgba(0,0,0,.1);
+    text-align:center;
+}
+
+h1{
+    color:#b8860b;
+}
+
+h2{
+    color:#444;
+}
+
+.btn{
+    display:inline-block;
+    margin:10px;
+    padding:12px 20px;
+    background:#b8860b;
+    color:white;
+    text-decoration:none;
+    border-radius:8px;
+}
+
+.btn:hover{
+    opacity:0.9;
+}
+
+input,
+select{
+    width:100%;
+    padding:12px;
+    margin:8px 0;
+    border:1px solid #ccc;
+    border-radius:5px;
+    box-sizing:border-box;
+}
+
+button{
+    background:#28a745;
+    color:white;
+    border:none;
+    padding:12px 20px;
+    border-radius:8px;
+    cursor:pointer;
+    width:100%;
+    font-size:16px;
+}
+
+button:hover{
+    opacity:0.9;
+}
+
+#mensaje{
+    margin-top:15px;
+    font-weight:bold;
+}
+
+</style>
+
+</head>
+
+<body>
+
+<div class="contenedor">
+
+    <h1>🎉 Estás Invitado 🎉</h1>
+
+    <h2>Boda de Ana y Carlos</h2>
+
+    <p><strong>Fecha:</strong> 15 de Agosto de 2026</p>
+    <p><strong>Hora:</strong> 7:00 PM</p>
+
+    <a
+        class="btn"
+        href="https://maps.google.com/?q=19.432608,-99.133209"
+        target="_blank">
+        📍 Ver Ubicación
+    </a>
+
+    <hr>
+
+    <h2>Confirma tu asistencia</h2>
+
+    <form id="rsvpForm">
+
+        <input
+            type="text"
+            id="nombre"
+            placeholder="Nombre completo"
+            required>
+
+        <select
+            id="asistencia"
+            required>
+
+            <option value="">
+                Selecciona una opción
+            </option>
+
+            <option value="Sí asistiré">
+                Sí asistiré
+            </option>
+
+            <option value="No podré asistir">
+                No podré asistir
+            </option>
+
+        </select>
+
+        <input
+            type="number"
+            id="acompanantes"
+            min="0"
+            value="0"
+            placeholder="Número de acompañantes">
+
+        <button type="submit">
+            Confirmar asistencia
+        </button>
+
+    </form>
+
+    <div id="mensaje"></div>
+
+</div>
+
+<script>
+
+const URL_SCRIPT =
+"https://script.google.com/macros/s/AKfycbw9Ny9zwK8DZYo43SAW8RuHcIXw1-DO7Swnx7-C_z87rx1y3o-fqS-M3nf_M1etBL8/exec";
+
+document
+.getElementById("rsvpForm")
+.addEventListener("submit", async function(e){
+
+    e.preventDefault();
+
+    const mensaje =
+    document.getElementById("mensaje");
+
+    const datos = {
+        nombre:
+            document.getElementById("nombre").value,
+
+        asistencia:
+            document.getElementById("asistencia").value,
+
+        acompanantes:
+            document.getElementById("acompanantes").value || 0
+    };
+
+    try {
+
+        mensaje.style.color = "#444";
+        mensaje.innerHTML = "⏳ Enviando confirmación...";
+
+        const respuesta = await fetch(
+            URL_SCRIPT,
+            {
+                method: "POST",
+                headers: {
+                    "Content-Type": "application/json"
+                },
+                body: JSON.stringify(datos)
+            }
+        );
+
+        const resultado =
+        await respuesta.json();
+
+        if(resultado.success){
+
+            mensaje.style.color = "green";
+
+            mensaje.innerHTML =
+            "✅ Confirmación enviada correctamente";
+
+            document
+            .getElementById("rsvpForm")
+            .reset();
+
+        }else{
+
+            mensaje.style.color = "red";
+
+            mensaje.innerHTML =
+            "❌ Error: " + resultado.message;
+        }
+
+    } catch(error){
+
+        mensaje.style.color = "red";
+
+        mensaje.innerHTML =
+        "❌ No fue posible enviar la información.";
+    }
+
+});
+
+</script>
+
+</body>
+</html>
