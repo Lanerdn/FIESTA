@@ -1,0 +1,176 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<title>Invitación de Fiesta</title>
+
+<style>
+
+body{
+    font-family: Arial, sans-serif;
+    background:#f4f4f4;
+    display:flex;
+    justify-content:center;
+    align-items:center;
+    min-height:100vh;
+    margin:0;
+}
+
+.contenedor{
+    background:white;
+    width:90%;
+    max-width:500px;
+    padding:30px;
+    border-radius:15px;
+    text-align:center;
+    box-shadow:0 0 15px rgba(0,0,0,.2);
+}
+
+h1{
+    color:#e91e63;
+}
+
+.info{
+    margin:20px 0;
+}
+
+input{
+    width:100%;
+    padding:12px;
+    margin-top:10px;
+    border:1px solid #ccc;
+    border-radius:8px;
+    box-sizing:border-box;
+}
+
+.btn{
+    display:block;
+    width:100%;
+    padding:12px;
+    border:none;
+    border-radius:8px;
+    margin-top:10px;
+    cursor:pointer;
+    color:white;
+    font-size:16px;
+}
+
+.ubicacion{
+    background:#2196f3;
+}
+
+.si{
+    background:#4caf50;
+}
+
+.no{
+    background:#f44336;
+}
+
+#mensaje{
+    margin-top:20px;
+    font-weight:bold;
+}
+
+</style>
+</head>
+
+<body>
+
+<div class="contenedor">
+
+<h1>🎉 ¡Estás Invitado! 🎉</h1>
+
+<div class="info">
+<h3>Fiesta de Cumpleaños</h3>
+
+<p>
+📅 15 de Junio 2026<br>
+🕖 7:00 PM<br>
+📍 Salón Los Pinos
+</p>
+
+</div>
+
+<input
+type="text"
+id="nombre"
+placeholder="Escribe tu nombre">
+
+<button
+class="btn ubicacion"
+onclick="abrirMapa()">
+📍 Ver Ubicación
+</button>
+
+<button
+class="btn si"
+onclick="confirmar('Sí')">
+✅ Confirmar Asistencia
+</button>
+
+<button
+class="btn no"
+onclick="confirmar('No')">
+❌ No Asistiré
+</button>
+
+<div id="mensaje"></div>
+
+</div>
+
+<script>
+
+const URL_SCRIPT =
+"https://script.google.com/macros/s/AKfycbxYT1ld4YKIbo0gAqy_roFhyKUOLC6slj2-wBqUVE_Stl_Haeb1gKKe5qmzquJJVYdyCg/exec";
+
+function abrirMapa(){
+
+window.open(
+"https://maps.google.com/?q=19.287860,-99.653240",
+"_blank"
+);
+
+}
+
+function confirmar(asistencia){
+
+let nombre =
+document.getElementById("nombre").value;
+
+if(nombre.trim()==""){
+
+alert("Ingresa tu nombre");
+
+return;
+}
+
+fetch(URL_SCRIPT,{
+method:"POST",
+body:JSON.stringify({
+nombre:nombre,
+asistencia:asistencia
+})
+})
+.then(res=>res.json())
+.then(data=>{
+
+document.getElementById("mensaje").innerHTML =
+"✅ Gracias por confirmar tu asistencia";
+
+document.getElementById("nombre").value="";
+})
+.catch(error=>{
+
+document.getElementById("mensaje").innerHTML =
+"❌ Error al enviar";
+});
+
+}
+
+</script>
+
+</body>
+</html>
